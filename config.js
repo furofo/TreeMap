@@ -7,7 +7,14 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
                 .attr("height", height) // gives it complete height account for margin later
              
              
-             
+    let tooltip = d3.select(".svgdiv")
+                    .append("div")
+                    .style("position", "absolute")
+                    .style("z-index", "10")
+                    .style("visiblity", "hidden")
+                    .style("background", "#ddd")
+                    .text("a simple tooltip")
+                    .attr("id", "tooltip");         
     //let g = svg.append("g") // this is g elmeent that I can use for magin
               // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -47,7 +54,22 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
                 return "blue";
             }
         })
-        .attr('class', 'tile');
+        .attr('class', 'tile')
+        .on("mouseover", function(d, i) {
+            tooltip
+                .style("left", d3.event.pageX - 50 + "px")
+                .style("top", d3.event.pageY - 90 + "px")
+                .style("visiblity", "visible")
+                .style("display","inline-block")
+                .style("background", "black")
+                .style("color", "white")
+                .style("opacity", "0.8")
+                .html("hello World!");
+        })
+        .on("mouseout", function(d) {
+            tooltip 
+                .style("display", "none");
+        });
 }
 
 
