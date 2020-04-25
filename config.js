@@ -46,7 +46,8 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
             else {
                 return "blue";
             }
-        });
+        })
+        .attr('class', 'tile');
 }
 
 
