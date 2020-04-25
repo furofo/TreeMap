@@ -11,9 +11,7 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
                     .append("div")
                     .style("position", "absolute")
                     .style("z-index", "10")
-                    .style("visiblity", "hidden")
-                    .style("background", "#ddd")
-                    .text("a simple tooltip")
+                    .style("visiblity", "none")
                     .attr("id", "tooltip");         
     //let g = svg.append("g") // this is g elmeent that I can use for magin
               // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
