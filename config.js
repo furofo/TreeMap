@@ -1,3 +1,45 @@
+let consoleColorSwitcher = (node) => {
+    switch(node.data.category) {
+        case 'PC':
+            return 'Gray';
+        case 'Wii':
+            return '#4C92C3';
+        case 'X360':
+            return '#FF993E';
+        case 'NES':
+            return '#ADE5A1';
+        case 'PS2':
+            return '#DE5253';
+        case 'PS4':
+            return '#A985CA';
+        case '3DS':
+            return '#FFADAB';
+        case 'SNES':
+            return '#D1C0DD';
+        case 'PS':
+            return '#A3786F';
+        case 'DS':
+            return '#BED2ED';
+        case 'PS3':
+            return '#56B356';
+        case 'GB':
+            return '#FFC993';
+        case 'GBA':
+            return '#E992CE';
+        case 'XB':
+            return '#F9C5DB';
+        case '2600':
+            return 'rgb(210,210,210)';
+        case 'N64':
+            return '#D0B0A9';
+        case 'PSP':
+            return '#C9CA4E';
+        case 'XOne':
+            return '#E2E2A4';
+
+    }
+}
+
 let makeTreeMap = function (json) { // this is function to actually make tree map
     //let margin = {top: 10, right: 10, bottom: 10, left: 10} // just  a convention for adding margin may remove this later
     let width = 960;// gets width without the marings
@@ -43,14 +85,14 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
            // console.log("this is d " + d);
            // console.log(d);
           // console.log(d.data.category);
-            
-            if(d.data.category == "PC") {
+          return consoleColorSwitcher(d); 
+           /* if(d.data.category == "PC") {
                 console.log("founc pc game" + d.data.name);
                 return "red";
             }
             else {
                 return "blue";
-            }
+            } */
         })
         .attr('class', 'tile')
         .on("mouseover", function(d, i) {
