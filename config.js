@@ -73,11 +73,10 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
     
     let g = svg.selectAll('g')
         .data(root.leaves())
-        .append('g');
-    svg.selectAll("rect")
-        .data(root.leaves())
         .enter()
-        .append("rect")
+        .append('g');
+    
+        g.append("rect")
         .attr("x", function(d) {
             return d.x0})
         .attr("y", function(d) {return d.y0})
@@ -123,15 +122,14 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
             tooltip 
                 .style("display", "none");
         })
-        .append("text")
-            .attr("x", function(d) {
-                console.log(d);
-                return d.x0
-            })
-            .attr("y", function(d) {
-                return d.y0
-            })
-            .text("hello world!");
+g.append("text")
+    .attr("x", function(d) {
+            return d.x0
+        })
+     .attr("y", function(d) {
+             return d.y1
+        })
+    .text("hello world!");
     
 }
 
