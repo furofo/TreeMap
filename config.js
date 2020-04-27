@@ -94,6 +94,9 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
                 return "blue";
             } */
         })
+        .attr('name', function(d) {
+            return d.data.name;
+        })
         .attr('class', 'tile')
         .on("mouseover", function(d, i) {
             tooltip
@@ -104,7 +107,7 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
                 .style("background", "black")
                 .style("color", "white")
                 .style("opacity", "0.8")
-                .html("hello World!");
+                .html("Name: " + d3.select(this).attr('name'));
         })
         .on("mouseout", function(d) {
             tooltip 
