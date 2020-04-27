@@ -70,7 +70,10 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
     .padding(1);
 
     treeMap(root);
-
+    
+    let g = svg.selectAll('g')
+        .data(root.leaves())
+        .append('g');
     svg.selectAll("rect")
         .data(root.leaves())
         .enter()
@@ -94,13 +97,13 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
                 return "blue";
             } */
         })
-        .attr('name', function(d) {
+        .attr('data-name', function(d) {
             return d.data.name;
         })
-        .attr('category', function(d) {
+        .attr('data-category', function(d) {
             return d.data.category;
         })
-        .attr('value', function(d) {
+        .attr('data-value', function(d) {
             return d.data.value;
         })
         .attr('class', 'tile')
@@ -113,13 +116,23 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
                 .style("background", "black")
                 .style("color", "white")
                 .style("opacity", "0.8")
-                .html("Name: " + d3.select(this).attr('name') + '<br />' + "Category: " + d3.select(this).attr('category')
-                        + '<br />' + "Value: " + d3.select(this).attr('value'));
+                .html("Name: " + d3.select(this).attr('data-name') + '<br />' + "Category: " + d3.select(this).attr('data-category')
+                        + '<br />' + "Value: " + d3.select(this).attr('data-value'));
         })
         .on("mouseout", function(d) {
             tooltip 
                 .style("display", "none");
-        });
+        })
+        .append("text")
+            .attr("x", function(d) {
+                console.log(d);
+                return d.x0
+            })
+            .attr("y", function(d) {
+                return d.y0
+            })
+            .text("hello world!");
+    
 }
 
 
