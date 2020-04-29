@@ -1,3 +1,44 @@
+let wrap = function(text, width) {
+    text.each(function () {
+        var text = d3.select(this),
+            words = text.text().split(/\s+/).reverse(),
+            word,
+            line = [],
+            lineNumber = 0,
+            lineHeight = 1, // ems
+            x = text.attr("x"),
+            y = text.attr("y"),
+            dy = 0, //parseFloat(text.attr("dy")),
+            tspan = text.text(null)
+                        .append("tspan")
+                        .attr("x", x)
+                        .attr("y", y)
+                        .attr("dy", dy + "em");
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan")
+                            .attr("x", x)
+                            .attr("y", y)
+                            .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                            .text(word);
+            }
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
 let consoleColorSwitcher = (node) => {
     switch(node.data.category) {
         case 'PC':
@@ -67,7 +108,7 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
 
     let treeMap = d3.treemap()
     .size([width, height])
-    .padding(1);
+    .padding(.4);
 
     treeMap(root);
     
@@ -122,15 +163,22 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
             tooltip 
                 .style("display", "none");
         })
+
 g.append("text")
     .attr("x", function(d) {
-            return d.x0
+            return d.x0 + 5;
         })
      .attr("y", function(d) {
-             return d.y1
+             return d.y0 + 5;
         })
-    .text("hello world!");
-    
+    .style('font-size', '10px')
+    .style('overflow', 'hidden')
+    .text(function(i) {
+        return i.data.name;
+    })
+        .call(wrap, 10);
+
+  
 }
 
 
