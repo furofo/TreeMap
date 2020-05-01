@@ -14,10 +14,7 @@ let wrap = function(text, width) {
                         .attr("x", x)
                         .attr("y", y)
                         .attr("dy", dy + "em");
-            let gHeight= text.attr('gHeight');
-            
-
-            
+            let gHeight= text.attr('gHeight');   
         while (word = words.pop()) {
             line.push(word);
             tspan.text(line.join(" "));
@@ -31,9 +28,7 @@ let wrap = function(text, width) {
                             .attr("dy", ++lineNumber * lineHeight + dy + "em")
                             .text(word);
             }
-        }
-        //getHeight(text);
-        console.log("this is g height" + gHeight + "vs text height:  " + getHeight(text));
+        }  
     });
     
 }
