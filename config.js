@@ -14,10 +14,14 @@ let wrap = function(text, width) {
                         .attr("x", x)
                         .attr("y", y)
                         .attr("dy", dy + "em");
+            let gHeight= text.attr('gHeight');
+            
+
+            
         while (word = words.pop()) {
             line.push(word);
             tspan.text(line.join(" "));
-            if (tspan.node().getComputedTextLength() > width) {
+            if (tspan.node().getComputedTextLength() > width && getHeight(text) < gHeight - 15) {
                 line.pop();
                 tspan.text(line.join(" "));
                 line = [word];
@@ -28,11 +32,18 @@ let wrap = function(text, width) {
                             .text(word);
             }
         }
+        //getHeight(text);
+        console.log("this is g height" + gHeight + "vs text height:  " + getHeight(text));
     });
+    
 }
 
 
-
+let getHeight = function (selection) {
+    console.log("heihgt of element is");
+    console.log(selection.node().getBBox().height)
+    return selection.node().getBBox().height;
+}
 
 
 
@@ -84,7 +95,7 @@ let consoleColorSwitcher = (node) => {
 let makeTreeMap = function (json) { // this is function to actually make tree map
     //let margin = {top: 10, right: 10, bottom: 10, left: 10} // just  a convention for adding margin may remove this later
     let width = 960;// gets width without the marings
-    let  height = 570;// height without the margins 
+    let  height = 670;// height without the margins 
     let svg = d3.select('#treeSvg') // selects my tree svg node from html and assigns it to variable svg
                 .attr("width", width) // gives it complete width account for margin later
                 .attr("height", height) // gives it complete height account for margin later
@@ -107,7 +118,7 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
     
 
     let treeMap = d3.treemap()
-    .size([width, height])
+    .size([width, height - 100])
     .padding(.4);
 
     treeMap(root);
@@ -116,6 +127,8 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
         .data(root.leaves())
         .enter()
         .append('g');
+
+        g.attr('id', 'treemap');
     
         g.append("rect")
         .attr("x", function(d) {
@@ -146,6 +159,7 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
         .attr('data-value', function(d) {
             return d.data.value;
         })
+        .attr("gHeight", function(d) {return d3.select(this).node().getBBox().height})
         .attr('class', 'tile')
         .on("mouseover", function(d, i) {
             tooltip
@@ -165,6 +179,10 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
         })
 
 g.append("text")
+    .attr("gHeight", function(d) {
+        
+        return d.y1 - d.y0;
+    })
     .attr("x", function(d) {
             return d.x0 + 5;
         })
@@ -176,9 +194,14 @@ g.append("text")
     .text(function(i) {
         return i.data.name;
     })
-        .call(wrap, 10);
+    .call(wrap, 10);
 
   
+let legend = svg.append("g")
+                .attr("id", "legend")
+                .attr("width", 400)
+                .attr("height", 400)
+                .attr("transform", "translate(430,570)");
 }
 
 

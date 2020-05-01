@@ -8,3 +8,15 @@ h1 {
     display: flex;
     justify-content: center;
 }
+
+#treemap {
+    overflow: hidden;
+}
+
+.tile {
+    overflow: hidden;
+}
+
+text {
+    overflow: hidden;
+}
