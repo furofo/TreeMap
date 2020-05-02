@@ -35,10 +35,10 @@ let wrap = function(text, width) {
 
 
 let getHeight = function (selection) {
-    console.log("heihgt of element is");
-    console.log(selection.node().getBBox().height)
+    
     return selection.node().getBBox().height;
 }
+
 
 
 
@@ -90,7 +90,7 @@ let consoleColorSwitcher = (node) => {
 let makeTreeMap = function (json) { // this is function to actually make tree map
     //let margin = {top: 10, right: 10, bottom: 10, left: 10} // just  a convention for adding margin may remove this later
     let width = 960;// gets width without the marings
-    let  height = 670;// height without the margins 
+    let  height = 570;// height without the margins 
     let svg = d3.select('#treeSvg') // selects my tree svg node from html and assigns it to variable svg
                 .attr("width", width) // gives it complete width account for margin later
                 .attr("height", height) // gives it complete height account for margin later
@@ -113,7 +113,7 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
     
 
     let treeMap = d3.treemap()
-    .size([width, height - 100])
+    .size([width, height])
     .padding(.4);
 
     treeMap(root);
@@ -191,12 +191,44 @@ g.append("text")
     })
     .call(wrap, 10);
 
-  
-let legend = svg.append("g")
-                .attr("id", "legend")
-                .attr("width", 400)
-                .attr("height", 400)
-                .attr("transform", "translate(430,570)");
+let consoleArr = ['PC', 'Wii', 'X360', 'NES', 'PS2', 'PS4', '3DS', 'SNES', 'PS', 'DS', 'PS3', 'GB', 'GBA', 'XB', '2600', 'N64', 'PSP', 'XOne'];
+let colorArr = ['Gray','#4C92C3', '#FF993E', '#ADE5A1', '#DE5253', '#A985CA', '#FFADAB', '#D1C0DD', '#A3786F', '#BED2ED', '#56B356', '#FFC993', '#E992CE',
+    "#F9C5DB", 'rgb(210,210,210)', '#D0B0A9', '#C9CA4E', '#E2E2A4'];
+
+let legendXscale = d3.scaleBand() 
+                  .domain(consoleArr) 
+                  .range([0, 960]);
+console.log("this is legend Xscale of Wii");
+console.log(consoleArr);
+console.log(legendXscale('Wii'));
+let legend = d3.select("#legend")
+                .attr("width", 960)
+                .attr("height", 400);
+
+    
+
+let legendG= legend.selectAll('g')
+    .data(consoleArr)
+    .enter()
+    .append('g');
+
+legendG
+    .append('rect')
+    .attr('x', (d, i) => { return legendXscale(d)})
+    .attr('y', '10')
+    .attr("width", legendXscale.bandwidth())
+    .attr("fill", 'red')
+    .attr('height', 40)
+legendG
+    .append('text')
+    .attr('x', d => legendXscale(d) + 5)
+    .attr('y', '35')
+    .text(d => d);
+
+
+
+        
+                
 }
 
 
