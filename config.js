@@ -1,14 +1,14 @@
-let wrap = function(text, width) {
-    text.each(function () {
+let wrap = function(text, width) { // this makes text wrap in rect elements by setting a maximum width for each row, also added funcitnality for height so it doesn't exceed height of r
+    text.each(function () {         //rect elements
         var text = d3.select(this),
             words = text.text().split(/\s+/).reverse(),
             word,
             line = [],
             lineNumber = 0,
-            lineHeight = 1, // ems
+            lineHeight = 1, 
             x = text.attr("x"),
             y = text.attr("y"),
-            dy = 0, //parseFloat(text.attr("dy")),
+            dy = 0, 
             tspan = text.text(null)
                         .append("tspan")
                         .attr("x", x)
@@ -34,18 +34,11 @@ let wrap = function(text, width) {
 }
 
 
-let getHeight = function (selection) {
-    
+let getHeight = function (selection) { //just a way to get height of a d3 selected element / node whatever you kids call it these days
     return selection.node().getBBox().height;
 }
 
-
-
-
-
-
-
-let consoleColorSwitcher = (node) => {
+let consoleColorSwitcher = (node) => { // logic for changing color may switch to color scale later
     switch(node.data.category) {
         case 'PC':
             return 'Gray';
@@ -88,12 +81,11 @@ let consoleColorSwitcher = (node) => {
 }
 
 let makeTreeMap = function (json) { // this is function to actually make tree map
-    //let margin = {top: 10, right: 10, bottom: 10, left: 10} // just  a convention for adding margin may remove this later
-    let width = 960;// gets width without the marings
-    let  height = 570;// height without the margins 
-    let svg = d3.select('#treeSvg') // selects my tree svg node from html and assigns it to variable svg
-                .attr("width", width) // gives it complete width account for margin later
-                .attr("height", height) // gives it complete height account for margin later
+    let width = 960;
+    let  height = 570; 
+    let svg = d3.select('#treeSvg') // selects my tree svg node/ element from html and assigns it to variable svg
+                .attr("width", width) 
+                .attr("height", height) 
              
              
     let tooltip = d3.select(".svgdiv")
@@ -102,16 +94,11 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
                     .style("z-index", "10")
                     .style("visiblity", "none")
                     .attr("id", "tooltip");         
-    //let g = svg.append("g") // this is g elmeent that I can use for magin
-              // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+    
     let root = d3.hierarchy(json).sum(function(d) {
-       // console.log("this is d " + d);
-       // console.log(d);
         return d.value
     }).sort(function(a, b) { return b.height - a.height || b.value - a.value; });
     
-
     let treeMap = d3.treemap()
     .size([width, height])
     .padding(.4);
@@ -122,39 +109,18 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
         .data(root.leaves())
         .enter()
         .append('g');
-
         g.attr('id', 'treemap');
-    
         g.append("rect")
-        .attr("x", function(d) {
-            return d.x0})
-        .attr("y", function(d) {return d.y0})
-        .attr('width', function (d) { return d.x1 - d.x0; })
-        .attr('height', function (d) { return d.y1 - d.y0; })
+        .attr("x", d => d.x0)
+        .attr("y", d => d.y0)
+        .attr('width', d => d.x1 - d.x0)
+        .attr('height', d => d.y1 - d.y0)
         .style("stroke", "white")
-        .style("fill", function(d) {
-           // console.log("this is d " + d);
-           // console.log(d);
-          // console.log(d.data.category);
-          return consoleColorSwitcher(d); 
-           /* if(d.data.category == "PC") {
-                console.log("founc pc game" + d.data.name);
-                return "red";
-            }
-            else {
-                return "blue";
-            } */
-        })
-        .attr('data-name', function(d) {
-            return d.data.name;
-        })
-        .attr('data-category', function(d) {
-            return d.data.category;
-        })
-        .attr('data-value', function(d) {
-            return d.data.value;
-        })
-        .attr("gHeight", function(d) {return d3.select(this).node().getBBox().height})
+        .style("fill", d =>  consoleColorSwitcher(d))
+        .attr('data-name', d => d.data.name)
+        .attr('data-category', d => d.data.category)
+        .attr('data-value', d => d.data.value)
+        .attr("gHeight", function (d) {return d3.select(this).node().getBBox().height}) // cant use arrow funciton here since this refers to window object instead of local rect
         .attr('class', 'tile')
         .on("mouseover", function(d, i) {
             tooltip
@@ -168,60 +134,45 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
                 .html("Name: " + d3.select(this).attr('data-name') + '<br />' + "Category: " + d3.select(this).attr('data-category')
                         + '<br />' + "Value: " + d3.select(this).attr('data-value'));
         })
-        .on("mouseout", function(d) {
-            tooltip 
-                .style("display", "none");
-        })
+        .on("mouseout", d => tooltip .style("display", "none"));
+        
 
 g.append("text")
-    .attr("gHeight", function(d) {
-        
-        return d.y1 - d.y0;
-    })
-    .attr("x", function(d) {
-            return d.x0 + 5;
-        })
-     .attr("y", function(d) {
-             return d.y0 + 5;
-        })
+    .attr("gHeight", d =>  d.y1 - d.y0)
+    .attr("x", d => d.x0 + 5)
+     .attr("y", d => d.y0 + 5)
     .style('font-size', '10px')
     .style('overflow', 'hidden')
-    .text(function(i) {
-        return i.data.name;
-    })
+    .text(d => d.data.name)
     .call(wrap, 10);
 
-let consoleArr = ['PC', 'Wii', 'X360', 'NES', 'PS2', 'PS4', '3DS', 'SNES', 'PS', 'DS', 'PS3', 'GB', 'GBA', 'XB', '2600', 'N64', 'PSP', 'XOne'];
+let consoleArr = ['PC', 'Wii', 'X360', 'NES', 'PS2', 'PS4', '3DS', 'SNES', 'PS', 'DS', 'PS3', 'GB', 'GBA', 'XB', '2600', 'N64', 'PSP', 'XOne']; 
 let colorArr = ['Gray','#4C92C3', '#FF993E', '#ADE5A1', '#DE5253', '#A985CA', '#FFADAB', '#D1C0DD', '#A3786F', '#BED2ED', '#56B356', '#FFC993', '#E992CE',
-    "#F9C5DB", 'rgb(210,210,210)', '#D0B0A9', '#C9CA4E', '#E2E2A4'];
+    "#F9C5DB", 'rgb(210,210,210)', '#D0B0A9', '#C9CA4E', '#E2E2A4']; // maybe use for this color scale later?
 
 let legendXscale = d3.scaleBand() 
-                  .domain(consoleArr) 
+                  .domain(consoleArr)  //used scaleband to get even widths easier
                   .range([0, 960]);
-console.log("this is legend Xscale of Wii");
-console.log(consoleArr);
-console.log(legendXscale('Wii'));
-let legend = d3.select("#legend")
+
+let legend = d3.select("#legend")   // made legend same width as svg working on logic for rows and centering later
                 .attr("width", 960)
                 .attr("height", 400);
 
-    
-
-let legendG= legend.selectAll('g')
+let legendG= legend.selectAll('g') // this assings group element (g) for every console
     .data(consoleArr)
     .enter()
     .append('g');
 
 legendG
     .append('rect')
-    .attr('x', (d, i) => { return legendXscale(d)})
+    .attr('x', d => legendXscale(d))
     .attr('y', '10')
     .attr("width", legendXscale.bandwidth())
-    .attr("fill", 'red')
+    .attr("fill", 'red') // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
     .attr('height', 40)
 legendG
     .append('text')
-    .attr('x', d => legendXscale(d) + 5)
+    .attr('x', d => legendXscale(d) + 5) // need to figure logic to make rows with rect and text elements and to center it somehow 
     .attr('y', '35')
     .text(d => d);
 
@@ -237,6 +188,6 @@ $(document).ready(function() {
     .then(response => response.json())
     .then(data => {
        let json = JSON.parse(JSON.stringify(data));
-       makeTreeMap(json);
+       makeTreeMap(json); // call all previous logic wiht makeTreeMap
     });
 });
