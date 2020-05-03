@@ -39,7 +39,7 @@ let getHeight = function (selection) { //just a way to get height of a d3 select
 }
 
 let consoleColorSwitcher = (node) => { // logic for changing color may switch to color scale later
-    switch(node.data.category) {
+    switch(node) {
         case 'PC':
             return 'Gray';
         case 'Wii':
@@ -116,7 +116,7 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
         .attr('width', d => d.x1 - d.x0)
         .attr('height', d => d.y1 - d.y0)
         .style("stroke", "white")
-        .style("fill", d =>  consoleColorSwitcher(d))
+        .style("fill", d =>  consoleColorSwitcher(d.data.category))
         .attr('data-name', d => d.data.name)
         .attr('data-category', d => d.data.category)
         .attr('data-value', d => d.data.value)
@@ -163,18 +163,79 @@ let legendG= legend.selectAll('g') // this assings group element (g) for every c
     .enter()
     .append('g');
 
-legendG
+    legendG
     .append('rect')
-    .attr('x', d => legendXscale(d))
-    .attr('y', '10')
+    //.attr('x', d => legendXscale(d))
+    .attr('x', function(d,i){
+  let xPos = 0;  
+  let xPosArr = [];
+    let k = 0;
+  while(xPosArr.length < consoleArr.length){
+    if(k < 3){
+      xPosArr.push(xPos);
+      xPos += legendXscale.bandwidth() + 10;
+      k++;
+    }else{
+      xPos = 0;
+      k = 0;
+    }
+  }
+  return xPosArr[i];
+})
+    .attr('y', function(d,i){
+  let yPos = 1;  
+  let yPosArr = [];
+  let k = 0;
+  while(yPosArr.length < consoleArr.length){
+    k++;
+    if(k < 4){
+      yPosArr.push(yPos);
+    }else{
+      yPos += 50;
+      k = 0;
+    }
+  }
+  return yPosArr[i];
+})
     .attr("width", legendXscale.bandwidth())
-    .attr("fill", 'red') // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
+    .attr("fill", d => consoleColorSwitcher(d)) // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
     .attr('height', 40)
 legendG
     .append('text')
-    .attr('x', d => legendXscale(d) + 5) // need to figure logic to make rows with rect and text elements and to center it somehow 
-    .attr('y', '35')
+    /*.attr('x', d => legendXscale(d) + 5) // need to figure logic to make rows with rect and text elements and to center it somehow */
+.attr('x', function(d,i){
+  let xPos = 10;  
+  let xPosArr = [];
+    let k = 0;
+  while(xPosArr.length < consoleArr.length){
+    if(k < 3){
+      xPosArr.push(xPos);
+      xPos += legendXscale.bandwidth() + 10;
+      k++;
+    }else{
+      xPos = 10;
+      k = 0;
+    }
+  }
+  return xPosArr[i];
+})
+    .attr('y', function(d,i){
+  let yPos = 30;  
+  let yPosArr = [];
+  let k = 0;
+  while(yPosArr.length < consoleArr.length){
+    k++;
+    if(k < 4){
+      yPosArr.push(yPos);
+    }else{
+      yPos += 50;
+      k = 0;
+    }
+  }
+  return yPosArr[i];
+})
     .text(d => d);
+
 
 
 
