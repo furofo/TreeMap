@@ -80,6 +80,9 @@ let consoleColorSwitcher = (node) => { // logic for changing color may switch to
     }
 }
 
+
+
+
 let makeTreeMap = function (json) { // this is function to actually make tree map
     let width = 960;
     let  height = 570; 
