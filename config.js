@@ -198,7 +198,7 @@ let legendG= legend.selectAll('g') // this assings group element (g) for every c
     .attr('x', (d, i) => rowCalc(0, 'x')[i])
     .attr('y', (d, i) => rowCalc(1, 'y')[i])
     .attr("width", legendXscale.bandwidth() + 40)
-    .attr("fill", d => consoleColorSwitcher(d)) // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
+    .attr("fill", d => 'none') // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
     .attr('height', 40)
 
 
@@ -216,7 +216,7 @@ legendG
     .attr('x', (d, i) => rowCalc(5, 'x')[i])
     .attr('y', (d, i) => rowCalc(10, 'y')[i])
     .attr("width", 20)
-    .attr("fill", "black") // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
+    .attr("fill", d => consoleColorSwitcher(d)) // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
     .attr('height', 20);
 
         
