@@ -158,62 +158,65 @@ let legend = d3.select("#legend")   // made legend same width as svg working on 
                 .attr("width", 960)
                 .attr("height", 400);
 
-let legendG= legend.selectAll('g') // this assings group element (g) for every console
+let legendG= legend.selectAll('g') // this assings group element (g) for every console in console array
     .data(consoleArr)
     .enter()
     .append('g');
 
     legendG
-    .append('rect')
+    .append('rect') // this appends a rect to each g so for each console there is now a g and a rect element
     //.attr('x', d => legendXscale(d))
     .attr('x', function(d,i){
-  let xPos = 0;  
+  let xPos = 0;   
   let xPosArr = [];
     let k = 0;
   while(xPosArr.length < consoleArr.length){
-    if(k < 3){
-      xPosArr.push(xPos);
-      xPos += legendXscale.bandwidth() + 10;
-      k++;
+    if(k < 3){ // this will run three times loci for rows
+      xPosArr.push(xPos); // this pushes a value of 0 to start with and gets incremented later
+      xPos += legendXscale.bandwidth() + 50; // so x starts at 0 which is start of all this then adds a padding of 10 between them
+      k++; // k is incremented
     }else{
-      xPos = 0;
-      k = 0;
+      xPos = 0; // if k is greater then 3 so this ran 4 times resert back to 0
+      k = 0;// k now becomes 0 but not incrmented so will run again with previsous logic will wind up runnint 3 times for each row for total of 6
     }
-  }
-  return xPosArr[i];
+  } // this will continue 
+  return xPosArr[i]; // while loop stops running onee array is used and from now on just returns xPosArr[i] may want to move this logic elsewhere later though
 })
     .attr('y', function(d,i){
   let yPos = 1;  
   let yPosArr = [];
   let k = 0;
   while(yPosArr.length < consoleArr.length){
-    k++;
-    if(k < 4){
+    
+    if(k < 3){
       yPosArr.push(yPos);
+      k++
     }else{
-      yPos += 50;
-      k = 0;
+      yPos += 50; // we move y push update in else this tiem becasue unlike x we only want to update y for new rows 
+      k = 0; // same logic as before
     }
   }
-  return yPosArr[i];
+  return yPosArr[i]; // ultimately wind up returning position y
 })
-    .attr("width", legendXscale.bandwidth())
+    .attr("width", legendXscale.bandwidth() + 40)
     .attr("fill", d => consoleColorSwitcher(d)) // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
     .attr('height', 40)
+
+
 legendG
     .append('text')
     /*.attr('x', d => legendXscale(d) + 5) // need to figure logic to make rows with rect and text elements and to center it somehow */
 .attr('x', function(d,i){
-  let xPos = 10;  
+  let xPos = 50;  
   let xPosArr = [];
     let k = 0;
   while(xPosArr.length < consoleArr.length){
     if(k < 3){
       xPosArr.push(xPos);
-      xPos += legendXscale.bandwidth() + 10;
+      xPos += legendXscale.bandwidth() + 50;
       k++;
     }else{
-      xPos = 10;
+      xPos = 50;
       k = 0;
     }
   }
@@ -238,6 +241,45 @@ legendG
 
 
 
+
+    legendG
+    .append('rect') // this appends a rect to each g so for each console there is now a g and a rect element
+    //.attr('x', d => legendXscale(d))
+    .attr('x', function(d,i){
+  let xPos = 5;   
+  let xPosArr = [];
+    let k = 0;
+  while(xPosArr.length < consoleArr.length){
+    if(k < 3){ // this will run three times loci for rows
+      xPosArr.push(xPos); // this pushes a value of 0 to start with and gets incremented later
+      xPos += legendXscale.bandwidth() + 50; // so x starts at 0 which is start of all this then adds a padding of 10 between them
+      k++; // k is incremented
+    }else{
+      xPos = 5; // if k is greater then 3 so this ran 4 times resert back to 0
+      k = 0;// k now becomes 0 but not incrmented so will run again with previsous logic will wind up runnint 3 times for each row for total of 6
+    }
+  } // this will continue 
+  return xPosArr[i]; // while loop stops running onee array is used and from now on just returns xPosArr[i] may want to move this logic elsewhere later though
+})
+    .attr('y', function(d,i){
+  let yPos = 10;  
+  let yPosArr = [];
+  let k = 0;
+  while(yPosArr.length < consoleArr.length){
+    
+    if(k < 3){
+      yPosArr.push(yPos);
+      k++
+    }else{
+      yPos += 50; // we move y push update in else this tiem becasue unlike x we only want to update y for new rows 
+      k = 0; // same logic as before
+    }
+  }
+  return yPosArr[i]; // ultimately wind up returning position y
+})
+    .attr("width", 20)
+    .attr("fill", "black") // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
+    .attr('height', 20);
 
         
                 
