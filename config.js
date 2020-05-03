@@ -150,6 +150,32 @@ let consoleArr = ['PC', 'Wii', 'X360', 'NES', 'PS2', 'PS4', '3DS', 'SNES', 'PS',
 let colorArr = ['Gray','#4C92C3', '#FF993E', '#ADE5A1', '#DE5253', '#A985CA', '#FFADAB', '#D1C0DD', '#A3786F', '#BED2ED', '#56B356', '#FFC993', '#E992CE',
     "#F9C5DB", 'rgb(210,210,210)', '#D0B0A9', '#C9CA4E', '#E2E2A4']; // maybe use for this color scale later?
 
+
+let rowCalc = function(startingPos, xOrY ) {
+        let position = startingPos;   
+        let positionArr = [];
+          let k = 0;
+        while(positionArr.length < consoleArr.length){
+          if(k < 3){ // this will run three times loci for rows
+            positionArr.push(position); // this pushes a value of 0 to start with and gets incremented later
+            if(xOrY == 'x'){
+            position += legendXscale.bandwidth() + 50;
+            } // so x starts at 0 which is start of all this then adds a padding of 10 between them
+            k++; // k is incremented
+          }else{
+            if(xOrY == 'y') {
+                position += 50;
+                 k = 0;
+            }
+            else {
+            position = startingPos; // if k is greater then 3 so this ran 4 times resert back to 0
+            k = 0;// k now becomes 0 but not incrmented so will run again with previsous logic will wind up runnint 3 times for each row for total of 6
+            }
+        }
+        } // this will continue 
+        return positionArr; // while loop stops running onee array is used and from now on just returns positionArr[i] may want to move this logic elsewhere later though
+    }
+
 let legendXscale = d3.scaleBand() 
                   .domain(consoleArr)  //used scaleband to get even widths easier
                   .range([0, 960]);
@@ -166,38 +192,8 @@ let legendG= legend.selectAll('g') // this assings group element (g) for every c
     legendG
     .append('rect') // this appends a rect to each g so for each console there is now a g and a rect element
     //.attr('x', d => legendXscale(d))
-    .attr('x', function(d,i){
-  let xPos = 0;   
-  let xPosArr = [];
-    let k = 0;
-  while(xPosArr.length < consoleArr.length){
-    if(k < 3){ // this will run three times loci for rows
-      xPosArr.push(xPos); // this pushes a value of 0 to start with and gets incremented later
-      xPos += legendXscale.bandwidth() + 50; // so x starts at 0 which is start of all this then adds a padding of 10 between them
-      k++; // k is incremented
-    }else{
-      xPos = 0; // if k is greater then 3 so this ran 4 times resert back to 0
-      k = 0;// k now becomes 0 but not incrmented so will run again with previsous logic will wind up runnint 3 times for each row for total of 6
-    }
-  } // this will continue 
-  return xPosArr[i]; // while loop stops running onee array is used and from now on just returns xPosArr[i] may want to move this logic elsewhere later though
-})
-    .attr('y', function(d,i){
-  let yPos = 1;  
-  let yPosArr = [];
-  let k = 0;
-  while(yPosArr.length < consoleArr.length){
-    
-    if(k < 3){
-      yPosArr.push(yPos);
-      k++
-    }else{
-      yPos += 50; // we move y push update in else this tiem becasue unlike x we only want to update y for new rows 
-      k = 0; // same logic as before
-    }
-  }
-  return yPosArr[i]; // ultimately wind up returning position y
-})
+    .attr('x', (d, i) => rowCalc(0, 'x')[i])
+    .attr('y', (d, i) => rowCalc(1, 'y')[i])
     .attr("width", legendXscale.bandwidth() + 40)
     .attr("fill", d => consoleColorSwitcher(d)) // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
     .attr('height', 40)
@@ -206,77 +202,16 @@ let legendG= legend.selectAll('g') // this assings group element (g) for every c
 legendG
     .append('text')
     /*.attr('x', d => legendXscale(d) + 5) // need to figure logic to make rows with rect and text elements and to center it somehow */
-.attr('x', function(d,i){
-  let xPos = 50;  
-  let xPosArr = [];
-    let k = 0;
-  while(xPosArr.length < consoleArr.length){
-    if(k < 3){
-      xPosArr.push(xPos);
-      xPos += legendXscale.bandwidth() + 50;
-      k++;
-    }else{
-      xPos = 50;
-      k = 0;
-    }
-  }
-  return xPosArr[i];
-})
-    .attr('y', function(d,i){
-  let yPos = 30;  
-  let yPosArr = [];
-  let k = 0;
-  while(yPosArr.length < consoleArr.length){
-    k++;
-    if(k < 4){
-      yPosArr.push(yPos);
-    }else{
-      yPos += 50;
-      k = 0;
-    }
-  }
-  return yPosArr[i];
-})
+.attr('x', (d, i) => rowCalc(40, 'x')[i])
+    .attr('y', (d, i) => rowCalc(30, 'y')[i])
     .text(d => d);
-
-
 
 
     legendG
     .append('rect') // this appends a rect to each g so for each console there is now a g and a rect element
     //.attr('x', d => legendXscale(d))
-    .attr('x', function(d,i){
-  let xPos = 5;   
-  let xPosArr = [];
-    let k = 0;
-  while(xPosArr.length < consoleArr.length){
-    if(k < 3){ // this will run three times loci for rows
-      xPosArr.push(xPos); // this pushes a value of 0 to start with and gets incremented later
-      xPos += legendXscale.bandwidth() + 50; // so x starts at 0 which is start of all this then adds a padding of 10 between them
-      k++; // k is incremented
-    }else{
-      xPos = 5; // if k is greater then 3 so this ran 4 times resert back to 0
-      k = 0;// k now becomes 0 but not incrmented so will run again with previsous logic will wind up runnint 3 times for each row for total of 6
-    }
-  } // this will continue 
-  return xPosArr[i]; // while loop stops running onee array is used and from now on just returns xPosArr[i] may want to move this logic elsewhere later though
-})
-    .attr('y', function(d,i){
-  let yPos = 10;  
-  let yPosArr = [];
-  let k = 0;
-  while(yPosArr.length < consoleArr.length){
-    
-    if(k < 3){
-      yPosArr.push(yPos);
-      k++
-    }else{
-      yPos += 50; // we move y push update in else this tiem becasue unlike x we only want to update y for new rows 
-      k = 0; // same logic as before
-    }
-  }
-  return yPosArr[i]; // ultimately wind up returning position y
-})
+    .attr('x', (d, i) => rowCalc(5, 'x')[i])
+    .attr('y', (d, i) => rowCalc(10, 'y')[i])
     .attr("width", 20)
     .attr("fill", "black") // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
     .attr('height', 20);
