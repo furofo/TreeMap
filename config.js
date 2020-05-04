@@ -218,7 +218,7 @@ legendG
     .append('rect') // this appends a rect to each g so for each console there is now a g and a rect element
     //.attr('x', d => legendXscale(d))
     .attr('x', (d, i) => rowCalc(((legendWidth - 280) / 2) + 5, 'x')[i])
-    .attr('y', (d, i) => rowCalc(10, 'y')[i])
+    .attr('y', (d, i) => rowCalc(14, 'y')[i])
     .attr("width", 20)
     .attr("fill", d => consoleColorSwitcher(d)) // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
     .attr('height', 20)
