@@ -18,7 +18,7 @@ let wrap = function(text, width) { // this makes text wrap in rect elements by s
         while (word = words.pop()) {
             line.push(word);
             tspan.text(line.join(" "));
-            if (tspan.node().getComputedTextLength() > width && getHeight(text) < gHeight - 15) {
+            if (tspan.node().getComputedTextLength() > width && getHeight(text) < gHeight - 20) {
                 line.pop();
                 tspan.text(line.join(" "));
                 line = [word];
@@ -144,7 +144,7 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
 g.append("text")
     .attr("gHeight", d =>  d.y1 - d.y0)
     .attr("x", d => d.x0 + 5)
-     .attr("y", d => d.y0 + 5)
+     .attr("y", d => d.y0 + 10)
     .style('font-size', '10px')
     .style('overflow', 'hidden')
     .text(d => d.data.name)
@@ -222,10 +222,7 @@ legendG
     .attr("width", 20)
     .attr("fill", d => consoleColorSwitcher(d)) // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
     .attr('height', 20)
-    .attr('class', 'legend-item');
-
-        
-                
+    .attr('class', 'legend-item');               
 }
 
 
