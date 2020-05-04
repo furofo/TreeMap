@@ -134,6 +134,7 @@ let makeTreeMap = function (json) { // this is function to actually make tree ma
                 .style("background", "black")
                 .style("color", "white")
                 .style("opacity", "0.8")
+                .attr('data-value', d3.select(this).attr('data-value'))
                 .html("Name: " + d3.select(this).attr('data-name') + '<br />' + "Category: " + d3.select(this).attr('data-category')
                         + '<br />' + "Value: " + d3.select(this).attr('data-value'));
         })
@@ -155,6 +156,7 @@ let colorArr = ['Gray','#4C92C3', '#FF993E', '#ADE5A1', '#DE5253', '#A985CA', '#
 
 
 let rowCalc = function(startingPos, xOrY ) {
+        
         let position = startingPos;   
         let positionArr = [];
           let k = 0;
@@ -179,12 +181,13 @@ let rowCalc = function(startingPos, xOrY ) {
         return positionArr; // while loop stops running onee array is used and from now on just returns positionArr[i] may want to move this logic elsewhere later though
     }
 
+let legendWidth = 960;
 let legendXscale = d3.scaleBand() 
                   .domain(consoleArr)  //used scaleband to get even widths easier
                   .range([0, 960]);
 
 let legend = d3.select("#legend")   // made legend same width as svg working on logic for rows and centering later
-                .attr("width", 960)
+                .attr("width", legendWidth)
                 .attr("height", 400);
 
 let legendG= legend.selectAll('g') // this assings group element (g) for every console in console array
@@ -195,17 +198,18 @@ let legendG= legend.selectAll('g') // this assings group element (g) for every c
     legendG
     .append('rect') // this appends a rect to each g so for each console there is now a g and a rect element
     //.attr('x', d => legendXscale(d))
-    .attr('x', (d, i) => rowCalc(0, 'x')[i])
-    .attr('y', (d, i) => rowCalc(1, 'y')[i])
     .attr("width", legendXscale.bandwidth() + 40)
     .attr("fill", d => 'none') // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
     .attr('height', 40)
+    .attr('class', 'container-rect')
+    .attr('x', (d, i) => rowCalc(((legendWidth - 280) / 2), 'x')[i])
+    .attr('y', (d, i) => rowCalc(1, 'y')[i]);
 
 
 legendG
     .append('text')
     /*.attr('x', d => legendXscale(d) + 5) // need to figure logic to make rows with rect and text elements and to center it somehow */
-.attr('x', (d, i) => rowCalc(40, 'x')[i])
+.attr('x', (d, i) => rowCalc(((legendWidth - 280) / 2) + 40, 'x')[i])
     .attr('y', (d, i) => rowCalc(30, 'y')[i])
     .text(d => d);
 
@@ -213,11 +217,12 @@ legendG
     legendG
     .append('rect') // this appends a rect to each g so for each console there is now a g and a rect element
     //.attr('x', d => legendXscale(d))
-    .attr('x', (d, i) => rowCalc(5, 'x')[i])
+    .attr('x', (d, i) => rowCalc(((legendWidth - 280) / 2) + 5, 'x')[i])
     .attr('y', (d, i) => rowCalc(10, 'y')[i])
     .attr("width", 20)
     .attr("fill", d => consoleColorSwitcher(d)) // use red placeholder for rects for now switching to white later and will put smaller rect inside these to give actually color key
-    .attr('height', 20);
+    .attr('height', 20)
+    .attr('class', 'legend-item');
 
         
                 
